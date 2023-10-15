@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/failur/failure.dart';
+import '../../data/models/city_model.dart';
 import '../entities/city.dart';
 import '../repostiory/base_repository.dart';
 
@@ -9,7 +10,7 @@ class GetFavoritesUseCase {
 
   GetFavoritesUseCase(this.repository);
 
-  Future<Either<Failure, List<City>>> execute({ids}) async {
-    return await repository.getFavorites(ids: ids);
+  Future<Either<Failure, FavResponse>> execute({ids, idsPlace}) async {
+    return await repository.getFavorites(ids: ids,idsPlace: idsPlace);
   }
 }

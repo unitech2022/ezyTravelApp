@@ -1,4 +1,4 @@
-import 'package:exit_travil/core/styles/colors.dart';
+
 import 'package:exit_travil/core/widgets/texts.dart';
 import 'package:exit_travil/presentation/controller/search_cubit/cubit/search_cubit.dart';
 import 'package:flutter/material.dart';

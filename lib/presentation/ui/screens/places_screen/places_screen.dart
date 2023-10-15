@@ -17,7 +17,7 @@ import '../../../../core/styles/sizing.dart';
 import '../../../../core/utlis/enums.dart';
 import '../../../../core/utlis/strings.dart';
 import '../../../../core/widgets/texts.dart';
-import '../../../../data/models/photo_model.dart';
+
 import '../../../../domin/entities/city_response.dart';
 import '../cities_screen/cities_screen.dart';
 import 'componts/list_photos.dart';
@@ -52,7 +52,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
           if (state.citiesStat == RequestState.loaded) {
             screens = [
               PlacesListWidget(state.response!.places),
-              ListPhotos(state.response!.photos as List<PhotoModel>),
+              ListPhotos(state.response!),
             ];
           }
         },
@@ -315,7 +315,7 @@ class DetailsCityWidget extends StatelessWidget {
                     
                   ),
             
-                  IconFavorite(city: response.city),
+                  IconFavorite(id: response.city.id,type: 0,),
                 ],
               ),
             ),

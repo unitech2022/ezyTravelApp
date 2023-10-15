@@ -19,8 +19,8 @@ abstract class BaseRemoteDataSource {
   Future<ResponseCountryModel> getCitiesByCountryId({page, countryId});
   Future<ResponseCityModel> getCityDetails({cityId});
   Future<PlaceDetailsModel> getPlaceDetails({placeId});
-  Future<List<CityModel>> getFavorites(ids);
-   Future<List<SearchResponse>> searchCity(textSearch);
+  Future<FavResponse> getFavorites(ids, idsPlace);
+  Future<List<SearchResponse>> searchCity(textSearch);
 }
 
 class RemoteDataSource implements BaseRemoteDataSource {
@@ -75,7 +75,6 @@ class RemoteDataSource implements BaseRemoteDataSource {
     );
     if (response.statusCode == 200) {
       return ResponseCountryModel.fromJson(response.data);
-      ;
     } else {
       throw ErrorMessageModel(
           statusCode: response.statusCode!,
@@ -89,9 +88,7 @@ class RemoteDataSource implements BaseRemoteDataSource {
       "${ApiConstants.getCityDetailsPath}cityId=$cityId",
     );
     if (response.statusCode == 200) {
-      
       return ResponseCityModel.fromJson(response.data);
-      
     } else {
       throw ErrorMessageModel(
           statusCode: response.statusCode!,
@@ -106,7 +103,6 @@ class RemoteDataSource implements BaseRemoteDataSource {
     );
     if (response.statusCode == 200) {
       return PlaceDetailsModel.fromJson(response.data);
-      ;
     } else {
       throw ErrorMessageModel(
           statusCode: response.statusCode!,
@@ -115,32 +111,28 @@ class RemoteDataSource implements BaseRemoteDataSource {
   }
 
   @override
-  Future<List<CityModel>> getFavorites(ids) async {
+  Future<FavResponse> getFavorites(ids, idsPlace) async {
     final response = await Dio().get(
-      "${ApiConstants.getFavoritesPath}ids=$ids".replaceAll("#", "%23"),
+      "${ApiConstants.getFavoritesPath}ids=$ids&idsPlace=$idsPlace"
+          .replaceAll("#", "%23"),
     );
+    print(response.statusCode.toString() + " ========> getFavorites");
     if (response.statusCode == 200) {
-    
-      return List<CityModel>.from(
-          (response.data as List).map((e) => CityModel.fromJson(e)));
-      ;
+      return FavResponse.fromJson(response.data);
     } else {
       throw ErrorMessageModel(
           statusCode: response.statusCode!,
           statusMessage: "حدث خطأ, حاول مرة أخرى");
     }
   }
-  
+
   @override
-  Future<List<SearchResponse>> searchCity(textSearch) async{
-    final response = await Dio().get(
-      "${ApiConstants.searchCitiesPath}textSearch=$textSearch"
-    );
+  Future<List<SearchResponse>> searchCity(textSearch) async {
+    final response = await Dio()
+        .get("${ApiConstants.searchCitiesPath}textSearch=$textSearch");
     if (response.statusCode == 200) {
-    
       return List<SearchResponse>.from(
           (response.data as List).map((e) => SearchResponse.fromJson(e)));
-      ;
     } else {
       throw ErrorMessageModel(
           statusCode: response.statusCode!,

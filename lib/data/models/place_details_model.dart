@@ -1,7 +1,7 @@
-import 'package:dartz/dartz.dart';
+
 import 'package:exit_travil/data/models/city_model.dart';
 import 'package:exit_travil/data/models/country_model.dart';
-import 'package:exit_travil/data/models/photo_model.dart';
+
 import 'package:exit_travil/data/models/place_model.dart';
 import 'package:exit_travil/domin/entities/place_details.dart';
 

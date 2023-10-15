@@ -32,6 +32,7 @@ class SliderWidget extends StatelessWidget {
               image: image,
               width: double.infinity,
               height: double.infinity,
+              
               iconError: const Icon(Icons.error)),
         );
       },

@@ -1,25 +1,21 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:exit_travil/core/helpers/helper_functions.dart';
 import 'package:exit_travil/core/styles/colors.dart';
-import 'package:exit_travil/core/utlis/api_constatns.dart';
 
 import 'package:exit_travil/core/widgets/texts.dart';
-import 'package:exit_travil/data/models/place_details_model.dart';
+
 import 'package:exit_travil/presentation/controller/place_cubit/place_cubit.dart';
-import 'package:exit_travil/presentation/ui/screens/show_image_screen/show_image_screen.dart';
-import 'package:exit_travil/presentation/ui/screens/video_player_screen/video_player_screen.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/svg.dart';
-import 'package:video_thumbnail_imageview/video_thumbnail_imageview.dart';
 
-import '../../../../core/services/services_locator.dart';
 import '../../../../core/utlis/enums.dart';
 
 import '../../../../core/widgets/back_buttons_widget.dart';
-import '../../../../domin/entities/place.dart';
+
 import '../../../../domin/entities/place_details.dart';
 import 'componts/indicator_widget.dart';
 import 'componts/slider_widget.dart';
@@ -333,44 +329,40 @@ class _PlaceDetailsListScreenState extends State<PlaceDetailsListScreen> {
                                               //       ),
                                               //     ))
 
-                                              // Positioned(
-                                              //   bottom: 60,
-                                              //   left: 0,
-                                              //   right: 0,
-                                              //   child: Container(
-                                              //     margin: const EdgeInsets.symmetric(
-                                              //         horizontal: 24),
-                                              //     height: 50,
-                                              //     child: Row(
-                                              //       mainAxisAlignment:
-                                              //           MainAxisAlignment
-                                              //               .spaceBetween,
-                                              //       children: [
-                                              //         Row(
-                                              //           children: [
-                                              //             SvgPicture.asset(
-                                              //                 "assets/icons/location.svg"),
-                                              //             sizedWidth(10),
-                                              //             Texts(
-                                              //                 title:
-                                              //                     "${placeDetails.city.title} , ${placeDetails.country.name}",
-                                              //                 textColor: const Color(
-                                              //                     0xffCED3D8),
-                                              //                 fontSize: 16,
-                                              //                 weight:
-                                              //                     FontWeight.bold),
-                                              //           ],
-                                              //         ),
-                                              //         Texts(
-                                              //             title: placeDetails.place.title,
-                                              //             textColor:
-                                              //                 const Color(0xffCED3D8),
-                                              //             fontSize: 16,
-                                              //             weight: FontWeight.bold),
-                                              //       ],
-                                              //     ),
-                                              //   ),
-                                              // )
+                                              Positioned(
+                                                bottom: 60,
+                                                left: 0,
+                                                right: 0,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    openMap(
+                                                        double.parse(
+                                                            placeDetails
+                                                                .place.latLng
+                                                                .split(",")[0]),
+                                                        double.parse(
+                                                            placeDetails
+                                                                .place.latLng
+                                                                .split(
+                                                                    ",")[1]));
+                                                  },
+                                                  child: Container(
+                                                    margin: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 24),
+                                                    height: 50,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                            "assets/icons/location.svg"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           ),
                                         ),
@@ -468,19 +460,17 @@ class _PlaceDetailsListScreenState extends State<PlaceDetailsListScreen> {
                               enableInfiniteScroll: false,
                               viewportFraction: 1,
                               scrollDirection: Axis.vertical)),
-                  
-                     Align(
+                      Align(
                         alignment: Alignment.topCenter,
                         child: Padding(
-                          padding: const EdgeInsets.only(top :30.0,left: 18,right: 18),
+                          padding: const EdgeInsets.only(
+                              top: 30.0, left: 18, right: 18),
                           child: BackButtonWidget(),
                         ),
                       ),
-                   
                     ],
                   ));
       },
     );
   }
 }
-

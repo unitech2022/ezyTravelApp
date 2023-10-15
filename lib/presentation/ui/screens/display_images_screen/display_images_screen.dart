@@ -1,18 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:exit_travil/core/widgets/back_buttons_widget.dart';
-import 'package:exit_travil/data/models/photo_model.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
+
 
 import '../../../../core/helpers/helper_functions.dart';
-import '../../../../core/styles/colors.dart';
+
 import '../../../../core/utlis/api_constatns.dart';
-import '../../../../core/widgets/cached_image_widget.dart';
+
 import '../../../../core/widgets/texts.dart';
 import '../../../../data/models/response_photos.dart';
 import '../places_screen/places_screen.dart';
@@ -29,7 +29,7 @@ class DisplayImagesScreen extends StatefulWidget {
 class _DisplayImagesScreenState extends State<DisplayImagesScreen> {
   @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
   }
 

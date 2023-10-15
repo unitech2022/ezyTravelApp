@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:exit_travil/domin/entities/city.dart';
 import 'package:exit_travil/domin/entities/country.dart';
-import 'package:exit_travil/domin/entities/photo.dart';
+
 import 'package:exit_travil/domin/entities/place.dart';
 
 class PlaceDetails extends Equatable {

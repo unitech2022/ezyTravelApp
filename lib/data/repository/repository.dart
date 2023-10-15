@@ -10,6 +10,7 @@ import 'package:exit_travil/domin/entities/city_response.dart';
 import 'package:exit_travil/domin/entities/place_details.dart';
 import 'package:exit_travil/domin/repostiory/base_repository.dart';
 import '../../core/error/exceptions.dart';
+import '../models/city_model.dart';
 
 class Repository extends BaseRepository {
   final BaseRemoteDataSource baseRemoteDataSource;
@@ -71,7 +72,6 @@ class Repository extends BaseRepository {
 
   @override
   Future<Either<Failure, CityResponse>> getCityDetails({cityId}) async {
-
     final result = await baseRemoteDataSource.getCityDetails(cityId: cityId);
 
     try {
@@ -101,11 +101,11 @@ class Repository extends BaseRepository {
   Future<List<String>> getFavoritesIds() {
     return baseLocalDataSource.getFavorites();
   }
-  
+
   @override
-  Future<Either<Failure, List<City>>> getFavorites({ids}) async{
+  Future<Either<Failure, FavResponse>> getFavorites({ids,idsPlace}) async {
     // TODO: implement getFavorites
-    final result = await baseRemoteDataSource.getFavorites(ids);
+    final result = await baseRemoteDataSource.getFavorites(ids,idsPlace);
 
     try {
       return Right(result);
@@ -113,9 +113,9 @@ class Repository extends BaseRepository {
       return Left(ServerFailure(failure.errorMessageModel.statusMessage));
     }
   }
-  
+
   @override
-  Future<Either<Failure, List<SearchResponse>>> searchCity({textSearch}) async{
+  Future<Either<Failure, List<SearchResponse>>> searchCity({textSearch}) async {
     // TODO: implement searchCity
     final result = await baseRemoteDataSource.searchCity(textSearch);
 
@@ -124,5 +124,15 @@ class Repository extends BaseRepository {
     } on ServerExceptions catch (failure) {
       return Left(ServerFailure(failure.errorMessageModel.statusMessage));
     }
+  }
+
+  @override
+  Future<bool> addFavoritePlace(List<String> ids) {
+    return baseLocalDataSource.addFavoritePlace(ids);
+  }
+
+  @override
+  Future<List<String>> getFavoritesIdsPlace() {
+    return baseLocalDataSource.getFavoritesPlace();
   }
 }

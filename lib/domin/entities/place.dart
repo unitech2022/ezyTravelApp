@@ -6,6 +6,9 @@ class Place extends Equatable {
   final int cityId;
   final String title;
   final String desc;
+
+    final String latLng;
+  final String addressName;
   final String image;
   final int status;
   final String createdAt;
@@ -17,10 +20,12 @@ class Place extends Equatable {
     required this.desc,
     required this.image,
     required this.status,
+       required this.latLng,
+    required this.addressName,
     required this.createdAt});
 
 
   @override
   List<Object> get props =>
-      [id, countryId, cityId, title, desc, image, status, createdAt,];
+      [id, countryId, cityId, title, desc, image, status, createdAt,latLng,addressName];
 }

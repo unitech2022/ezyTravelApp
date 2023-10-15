@@ -1,1 +1,1 @@
-const double paddingCityTitle = 7.0;
+const double paddingCityTitle = 5.0;

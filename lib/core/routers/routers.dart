@@ -1,4 +1,4 @@
-const welcome="/welcome";
+const welcome="/";
 const navigation= "/navigation";
 const home="/home";
 const city="/city";

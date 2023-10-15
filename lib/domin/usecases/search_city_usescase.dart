@@ -1,6 +1,6 @@
 
 import 'package:dartz/dartz.dart';
-import 'package:exit_travil/domin/entities/place_details.dart';
+
 
 import '../../core/failur/failure.dart';
 import '../entities/city.dart';

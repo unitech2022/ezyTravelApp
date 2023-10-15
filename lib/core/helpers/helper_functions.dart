@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../routers/routers.dart';
 import '../statics/statics.dart';
 import '../utlis/data.dart';
 
@@ -46,6 +46,7 @@ readIds() async {
   final prefs = await SharedPreferences.getInstance();
 
   Statics.ids = prefs.getStringList("fav") ?? [];
+  Statics.idsPlace = prefs.getStringList("favplace") ?? [];
 }
 
 class CustomCacheManager {
@@ -63,5 +64,15 @@ String getText(String text) {
   if (text.contains("*")) {
     return currentLang == "ar" ? text.split("*")[0] : text.split("*")[1];
   } else
-   return text;
+    return text;
 }
+
+
+  Future<void> openMap(double latitude, double longitude) async {
+    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunchUrl(Uri.parse(googleUrl))) {
+      await launchUrl(Uri.parse(googleUrl),mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not open the map.';
+    }
+  }

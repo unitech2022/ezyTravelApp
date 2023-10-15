@@ -5,7 +5,7 @@ import 'package:exit_travil/domin/usecases/search_city_usescase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utlis/enums.dart';
-import '../../../../domin/entities/city_response.dart';
+
 
 part 'search_state.dart';
 

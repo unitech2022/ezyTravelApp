@@ -7,4 +7,9 @@ class AppInitial extends AppState {}
 
 class StartHome extends AppState {}
 
-class ChangeIndex extends AppState {}
+class ChangeIndex extends AppState {
+  int currentIndex;
+
+  ChangeIndex({this.currentIndex=0});
+
+}

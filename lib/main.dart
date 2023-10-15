@@ -3,6 +3,7 @@ import 'package:exit_travil/core/helpers/helper_functions.dart';
 import 'package:exit_travil/core/routers/routers.dart';
 import 'package:exit_travil/core/styles/colors.dart';
 import 'package:exit_travil/core/thems/them.dart';
+
 import 'package:exit_travil/presentation/controller/app_bloc/app_cubit.dart';
 import 'package:exit_travil/presentation/controller/favorite_cubit/cubit/favorite_cubit.dart';
 import 'package:exit_travil/presentation/controller/home_bloc/home_cubit.dart';
@@ -14,7 +15,7 @@ import 'package:exit_travil/presentation/ui/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:go_router/go_router.dart';
 import 'core/services/services_locator.dart';
 import 'core/utlis/data.dart';
 
@@ -32,7 +33,7 @@ void main() async {
         // <-- change the path of the translation files
         fallbackLocale: const Locale("ar"),
         startLocale: Locale(currentLang),
-        child: Phoenix(child: const MyApp())),
+        child: const MyApp()),
   );
 }
 
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<FavoriteCubit>(
             create: (BuildContext context) => sl<FavoriteCubit>()
               ..getFavorites()
-              ..getFavoritesIds()),
+              ..getFavoritesIds()..getFavoritePlaceIds()),
         BlocProvider<AppCubit>(create: (BuildContext context) => AppCubit()),
         BlocProvider<PhotoCubit>(
             create: (BuildContext context) =>
@@ -68,12 +69,14 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) => sl<PlaceCubit>())
       ],
       child: MaterialApp(
-        title: 'Exit Travail',
+        title: 'Ezy Travail',
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
         debugShowCheckedModeBanner: false,
         theme: theme,
+        
+        // routerConfig: router,
         initialRoute: welcome,
         routes: {
           welcome: (context) => const WelcomeScreen(),
@@ -82,4 +85,25 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+   /// This handles '/' and '/details'.
+
 }
+ final router = GoRouter(
+   routes: [
+     GoRoute(
+       path: '/',
+       builder: (_, __) => Scaffold(
+         appBar: AppBar(title: const Text('Home Screen')),
+       ),
+       routes: [
+         GoRoute(
+           path: 'details',
+           builder: (_, __) => Scaffold(
+             appBar: AppBar(title: const Text('Details Screen')),
+           ),
+         ),
+       ],
+     ),
+   ],
+ );

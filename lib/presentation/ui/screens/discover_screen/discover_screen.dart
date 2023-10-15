@@ -12,20 +12,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/services/services_locator.dart';
+
 import '../../../../core/utlis/api_constatns.dart';
 import '../../../../core/utlis/enums.dart';
 import '../../../../core/utlis/strings.dart';
 import '../../../../core/widgets/place_holder_widget.dart';
 
 
-class DiscoverScreen extends StatelessWidget {
-  final ScrollController _scrollController = ScrollController();
-
-  int currentPage = 1;
+class DiscoverScreen extends StatefulWidget {
 
   DiscoverScreen({super.key});
 
+  @override
+  State<DiscoverScreen> createState() => _DiscoverScreenState();
+}
+
+class _DiscoverScreenState extends State<DiscoverScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  int currentPage = 1;
 
   @override
   Widget build(BuildContext context) {

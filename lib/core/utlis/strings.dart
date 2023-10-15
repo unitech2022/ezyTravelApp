@@ -9,6 +9,8 @@ class Strings{
   static const String notCities="لا توجد مدن";
   static const String photos="صور";
   static const String places="معالم";
+  static const String cities="مدن";
+  
   static const String notFav="لا توجد عناصر في المفضلة";
  static const String search=  "اكتب اسم المدينة هنا";
  static const String notCitiesResult=  "لا توجد نتائج";

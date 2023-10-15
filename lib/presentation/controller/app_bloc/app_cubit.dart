@@ -7,11 +7,12 @@ part 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(AppInitial());
-  static AppCubit get(context)=> BlocProvider.of<AppCubit>(context);
+  static AppCubit get(context) => BlocProvider.of<AppCubit>(context);
 
   startNavigationPage(context) {
     Future.delayed(const Duration(seconds: 3), () {
       pushPageRoutNameReplaced(context, navigation);
+
       emit(StartHome());
     });
   }
@@ -19,6 +20,7 @@ class AppCubit extends Cubit<AppState> {
   int currentIndex = 1;
   changeIndexNavigation(int newIndex) {
     currentIndex = newIndex;
-    emit(ChangeIndex());
+    print(currentIndex);
+    emit(ChangeIndex(currentIndex: newIndex));
   }
 }

@@ -20,6 +20,8 @@ import 'package:exit_travil/presentation/controller/place_cubit/place_cubit.dart
 import 'package:exit_travil/presentation/controller/search_cubit/cubit/search_cubit.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../domin/usecases/add_fav_place_ids_uses_case.dart';
+import '../../domin/usecases/get_fav_place_ids_usecase.dart';
 import '../../presentation/controller/country_bloc/country_cubit.dart';
 
 final sl = GetIt.instance;
@@ -32,8 +34,8 @@ class ServicesLocator {
     sl.registerFactory(() => CountryCubit(sl(), sl()));
     sl.registerFactory(() => CityCubit(sl()));
     sl.registerFactory(() => PlaceCubit(sl()));
-    sl.registerFactory(() => FavoriteCubit(sl(), sl(),sl()));
-       sl.registerFactory(() => SearchCubit(sl()));
+    sl.registerFactory(() => FavoriteCubit(sl(), sl(), sl(),sl(),sl()));
+    sl.registerFactory(() => SearchCubit(sl()));
 
     /// use Cases
     sl.registerLazySingleton(() => GetHomeDataUseCase(sl()));
@@ -45,6 +47,8 @@ class ServicesLocator {
     sl.registerLazySingleton(() => GetFavoritesUseCase(sl()));
     sl.registerLazySingleton(() => GetFavoriteIdsUseCase(sl()));
     sl.registerLazySingleton(() => AddFavoriteUseCase(sl()));
+    sl.registerLazySingleton(() => GetFavoritePlaceIdsUseCase(sl()));
+    sl.registerLazySingleton(() => AddFavoritePlaceUseCase(sl()));
     sl.registerLazySingleton(() => SearchCityUseCase(sl()));
 
     /// repository

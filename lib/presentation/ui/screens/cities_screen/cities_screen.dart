@@ -52,14 +52,14 @@ class CitiesScreen extends StatelessWidget {
                   automaticallyImplyLeading: false,
                   elevation: 0,
                   title: Texts(
-                    title:getText(continent.name),
+                    title: getText(continent.name),
                     textColor: Colors.white,
                     fontSize: 16,
                     weight: FontWeight.normal,
                   ),
                 ),
                 body: state.countries!.isEmpty
-                    ?  Center(
+                    ? Center(
                         child: Texts(
                           title: Strings.notCountries.tr(),
                           textColor: Colors.white,
@@ -76,26 +76,25 @@ class CitiesScreen extends StatelessWidget {
                               // state.countries!.length > 4
                               //     ?
                               CarouselSlider.builder(
-                                      itemCount: lists.length,
-                                      itemBuilder: (BuildContext context,
-                                              int itemIndex,
-                                              int pageViewIndex) =>
-                                          Container(
-                                        child: ListCountries(lists[itemIndex],
-                                            state.currentIndex),
-                                      ),
-                                      options: CarouselOptions(
-                                        onPageChanged: (index, reason) {
-                                          CountryCubit.get(context)
-                                              .changeIndexCountryPage(index);
-                                        },
-                                        autoPlay: false,
-                                        enableInfiniteScroll: false,
-                                        viewportFraction: .8,
-                                        aspectRatio: 1.3,
-                                        // initialPage: 2,
-                                      ),
-                                    )
+                                itemCount: lists.length,
+                                itemBuilder: (BuildContext context,
+                                        int itemIndex, int pageViewIndex) =>
+                                    Container(
+                                  child: ListCountries(
+                                      lists[itemIndex], state.currentIndex),
+                                ),
+                                options: CarouselOptions(
+                                  onPageChanged: (index, reason) {
+                                    CountryCubit.get(context)
+                                        .changeIndexCountryPage(index);
+                                  },
+                                  autoPlay: false,
+                                  enableInfiniteScroll: false,
+                                  viewportFraction: .8,
+                                  aspectRatio: 1.3,
+                                  // initialPage: 2,
+                                ),
+                              )
                               //     :
                               // ListCountries(
                               //         state.countries!, state.currentIndex)
@@ -217,9 +216,9 @@ class _ListCountriesState extends State<ListCountries> {
                       ),
                       sizedHeight(13),
                       Texts(
-                        title:currentLang == "ar"
-      ? country.name.split("*")[0]
-      : country.name.split("*")[1],
+                        title: currentLang == "ar"
+                            ? country.name.split("*")[0]
+                            : country.name.split("*")[1],
                         textColor: textColor,
                         fontSize: 14,
                         weight: FontWeight.normal,
@@ -253,7 +252,7 @@ class DetailsCountry extends StatelessWidget {
                 RowDetailsCountry(state.detailsCountry!.country),
                 sizedHeight(10),
                 state.detailsCountry!.cities.isEmpty
-                    ?  Padding(
+                    ? Padding(
                         padding: EdgeInsets.only(top: 100.0),
                         child: Texts(
                           title: Strings.notCities.tr(),
@@ -317,38 +316,38 @@ class DetailsCountry extends StatelessWidget {
                                   ),
                                 ),
                                 Align(
-                                  alignment: Alignment.topCenter,
-
+                                    alignment: Alignment.topCenter,
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left: 10,right: 10,top: 4),
+                                      padding: const EdgeInsets.only(
+                                          left: 10, right: 10, top: 4),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
-                                          IconFavorite(city: city),
+                                          IconFavorite(
+                                            id: city.id,
+                                            type: 0,
+                                          ),
                                         ],
                                       ),
                                     )),
                                 Align(
                                     alignment: Alignment.bottomCenter,
-
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left:8,right: 8,bottom: 4),
+                                      padding: const EdgeInsets.only(
+                                          left: 8, right: 8, bottom: 4),
                                       child: Row(
-
                                         children: [
                                           Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-
-
                                               const Icon(
                                                 Icons.location_on,
                                                 color: Colors.white,
                                               ),
-
                                               sizedWidth(paddingCityTitle),
                                               Texts(
-                                                title:getText(city.title) ,
+                                                title: getText(city.title),
                                                 textColor: Colors.white,
                                                 fontSize: 14,
                                                 weight: FontWeight.normal,
@@ -404,12 +403,9 @@ void showBottomSheetWidgetPlaces(context, cityId) {
 }
 
 class IconFavorite extends StatelessWidget {
-  const IconFavorite({
-    Key? key,
-    required this.city,
-  }) : super(key: key);
-
-  final City city;
+  final int id, type;
+  const IconFavorite({Key? key, required this.id, required this.type})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -417,13 +413,21 @@ class IconFavorite extends StatelessWidget {
       builder: (context, state) {
         return IconButton(
           icon: Icon(
-            FavoriteCubit.get(context).ids.contains(city.id.toString())
-                ? Icons.favorite
-                : Icons.favorite_border_outlined,
+            type == 0
+                ? FavoriteCubit.get(context).ids.contains(id.toString())
+                    ? Icons.favorite
+                    : Icons.favorite_border_outlined
+                : FavoriteCubit.get(context).idsPlace.contains(id.toString())
+                    ? Icons.favorite
+                    : Icons.favorite_border_outlined,
             color: Colors.white,
           ),
           onPressed: () {
-            FavoriteCubit.get(context).addFavorite(city.id.toString());
+            if (type == 0) {
+              FavoriteCubit.get(context).addFavorite(id.toString());
+            } else {
+              FavoriteCubit.get(context).addFavoritePlace(id.toString());
+            }
           },
         );
       },

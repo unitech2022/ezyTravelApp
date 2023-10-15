@@ -1,6 +1,6 @@
 import 'package:exit_travil/core/styles/colors.dart';
 import 'package:exit_travil/core/utlis/api_constatns.dart';
-import 'package:exit_travil/domin/entities/place.dart';
+
 import 'package:exit_travil/domin/entities/place_details.dart';
 import 'package:exit_travil/presentation/ui/screens/places_screen/places_screen.dart';
 import 'package:flutter/material.dart';
