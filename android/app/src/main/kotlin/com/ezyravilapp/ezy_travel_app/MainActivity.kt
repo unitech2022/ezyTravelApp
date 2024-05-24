@@ -1,4 +1,4 @@
-package com.exit_travil.exit_travil
+package com.ezyravilapp.ezy_travel_app
 
 import io.flutter.embedding.android.FlutterActivity
 

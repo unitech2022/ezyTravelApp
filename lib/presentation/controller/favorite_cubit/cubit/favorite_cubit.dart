@@ -1,17 +1,15 @@
-import 'package:bloc/bloc.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:exit_travil/core/utlis/enums.dart';
+import 'package:exit_travil/domin/entities/place.dart';
 import 'package:exit_travil/domin/usecases/get_fav_ids_usecase.dart';
 import 'package:exit_travil/domin/usecases/get_favorits_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/statics/statics.dart';
 import '../../../../data/models/city_model.dart';
-
 import '../../../../domin/usecases/add_fav_ids_uses_case.dart';
 import '../../../../domin/usecases/add_fav_place_ids_uses_case.dart';
 import '../../../../domin/usecases/get_fav_place_ids_usecase.dart';
-
 part 'favorite_state.dart';
 
 class FavoriteCubit extends Cubit<FavoriteState> {
@@ -39,6 +37,14 @@ class FavoriteCubit extends Cubit<FavoriteState> {
 
   changIndexTab(newIndex) {
     emit(state.copyWith(currentIndex: newIndex));
+  }
+  changIndexTabCity(newIndex) {
+    emit(state.copyWith(currentIndexCitySelected: newIndex));
+  }
+
+  fillterFav(List<Place> list) async {
+
+    emit(state.copyWith(placesFillter: list));
   }
 
   List<String> newIds = [];
@@ -71,6 +77,8 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     idsPlace = Statics.idsPlace;
     emit(FavoriteState(idsFav: ids));
   }
+
+
 
   List<String> newIdsPlace = [];
   addFavoritePlace(id) {
@@ -123,7 +131,10 @@ class FavoriteCubit extends Cubit<FavoriteState> {
         emit(FavoriteState(favState: RequestState.error, message: l.message));
       }, (r) {
         // print(r.places.length.toString() + "success");
-        emit(FavoriteState(favState: RequestState.loaded, favorites: r));
+        emit(FavoriteState(favState: RequestState.loaded, favorites: r,placesFillter:r.citiesOfPlaces.isEmpty?
+            []:r.places.where((element) => element.cityId== r.citiesOfPlaces[0].id).toList()
+            ,currentIndexCitySelected:r.citiesOfPlaces.isEmpty?0:
+        r.citiesOfPlaces[0].id));
       });
     });
   }

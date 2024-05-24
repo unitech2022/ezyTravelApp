@@ -86,7 +86,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     width: 120,
                    height: 120,
                    
-                    margin: EdgeInsets.only(top: 30),
+                    margin: EdgeInsets.only(top: 25),
                     decoration: BoxDecoration(
                       
                     ),

@@ -9,6 +9,7 @@ import 'package:exit_travil/presentation/controller/favorite_cubit/cubit/favorit
 import 'package:exit_travil/presentation/controller/home_bloc/home_cubit.dart';
 import 'package:exit_travil/presentation/controller/photo_bloc/photo_cubit.dart';
 import 'package:exit_travil/presentation/controller/place_cubit/place_cubit.dart';
+import 'package:exit_travil/presentation/controller/search_cubit/cubit/search_cubit.dart';
 import 'dart:io';
 import 'package:exit_travil/presentation/ui/screens/navigation_screen.dart';
 import 'package:exit_travil/presentation/ui/screens/welcome_screen.dart';
@@ -16,12 +17,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'core/network/http_overriddes.dart';
 import 'core/services/services_locator.dart';
 import 'core/utlis/data.dart';
 
 void main() async {
   ServicesLocator().init();
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
   await EasyLocalization.ensureInitialized();
   await readIds();
   getCurrentLange();
@@ -59,6 +62,10 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) => sl<FavoriteCubit>()
               ..getFavorites()
               ..getFavoritesIds()..getFavoritePlaceIds()),
+
+        BlocProvider<SearchCubit>(
+            create: (BuildContext context) => sl<SearchCubit>()
+              ),
         BlocProvider<AppCubit>(create: (BuildContext context) => AppCubit()),
         BlocProvider<PhotoCubit>(
             create: (BuildContext context) =>

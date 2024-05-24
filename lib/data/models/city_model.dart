@@ -23,11 +23,16 @@ class CityModel extends City {
 class FavResponse {
   final List<CityModel> cities;
   final List<PlaceModel> places;
-  FavResponse({required this.cities, required this.places});
+  final List<CityModel> citiesOfPlaces;
+  FavResponse({required this.cities, required this.places,required this.citiesOfPlaces });
 
   factory FavResponse.fromJson(Map<String, dynamic> json) => FavResponse(
       cities: List<CityModel>.from(
           (json["cities"] as List).map((e) => CityModel.fromJson(e))),
       places: List<PlaceModel>.from(
-          (json["places"] as List).map((e) => PlaceModel.fromJson(e))));
+          (json["places"] as List).map((e) => PlaceModel.fromJson(e))),
+
+
+      citiesOfPlaces: List<CityModel>.from(
+          (json["citiesOfPlaces"] as List).map((e) => CityModel.fromJson(e))));
 }

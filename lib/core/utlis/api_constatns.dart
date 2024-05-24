@@ -1,6 +1,8 @@
 class ApiConstants {
-  static const baseUrl ="https://webapi.exittravel.app";
-  // static const baseUrl = "https://638d-154-183-195-186.ngrok-free.app";
+ static const baseUrl ="https://apis.ezytravel.app";
+//  static const baseUrl = "http://localhost:5010";
+
+// static const baseUrl = "http://b62b-197-38-57-192.ngrok-free.app";
   static const baseUrlImages = "$baseUrl/images/";
   static const baseUrlVideos = "$baseUrl/videos/";
   static const getDataHomePath = "$baseUrl/home/get-home";

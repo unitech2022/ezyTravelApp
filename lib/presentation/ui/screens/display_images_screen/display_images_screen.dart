@@ -1,10 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:exit_travil/core/widgets/back_buttons_widget.dart';
 
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -57,8 +56,11 @@ class _DisplayImagesScreenState extends State<DisplayImagesScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          pushPage(context,
-                              PlacesScreen(cityId: photoResponse.city.id));
+                          if( photoResponse.city!=null){
+                            pushPage(context,
+                              PlacesScreen(cityId: photoResponse.city!.id));
+                          }
+                          
                         },
                         child: Container(
                           height: 40,
@@ -73,7 +75,8 @@ class _DisplayImagesScreenState extends State<DisplayImagesScreen> {
                               
                               Texts(
                                   title:
-                                      getText(photoResponse.city.title) +" , "+ getText(photoResponse.country.name),
+                                    photoResponse.city!=null?  getText(photoResponse.city!.title) +" , "
+                                      + getText(photoResponse.country!.name):"",
                                   textColor: const Color(0xffCED3D8),
                                   fontSize: 16,
                                   weight: FontWeight.bold),

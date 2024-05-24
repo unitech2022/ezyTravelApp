@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/helpers/helper_functions.dart';
 import '../../../../core/styles/colors.dart';
@@ -66,7 +67,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       weight: FontWeight.normal,
                     )),
               state.favorites!.places.isNotEmpty
-                  ? PlacesListWidget(state.favorites!.places)
+                  ? PlacesListFavWidget(state.favorites!.places,state.favorites!.citiesOfPlaces)
                   : Center(
                       child: Texts(
                       title: Strings.notFav.tr(),
@@ -85,15 +86,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       children: [
-                        ContainerTab(
-                          height: 25,
+                        ContainerTabFav(
+                          height: 26,
                           icon: "assets/icons/city.svg",
                           textColor: state.currentIndex == 0
-                              ? Colors.black
-                              : Colors.white70,
+                              ? Colors.white
+                              : Colors.white30,
                           backgroundColor: state.currentIndex == 0
                               ? Colors.white
-                              : Color.fromARGB(255, 72, 71, 71).withOpacity(.5),
+                              : Colors.transparent,
                           title: Strings.cities.tr(),
                           onTap: () {
                             controllerPage.jumpToPage(0);
@@ -103,15 +104,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         SizedBox(
                           width: 10,
                         ),
-                        ContainerTab(
-                          height: 32,
+                        ContainerTabFav(
+                          height: 26,
                           icon: "assets/icons/map.svg",
                           textColor: state.currentIndex == 1
-                              ? Colors.black
-                              : Colors.white70,
+                              ? Colors.white
+                              : Colors.white30,
                           backgroundColor: state.currentIndex == 1
                               ? Colors.white
-                              : Color.fromARGB(255, 72, 71, 71).withOpacity(.5),
+                              : Colors.transparent,
                           title: Strings.places.tr(),
                           onTap: () {
                             controllerPage.jumpToPage(1);
@@ -121,7 +122,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       ],
                     ),
                   ),
-                  sizedHeight(20),
+                  sizedHeight(10),
                   Expanded(
                       child: PageView(
                         physics: NeverScrollableScrollPhysics(),
@@ -241,3 +242,61 @@ class ListCitiesFavWidget extends StatelessWidget {
         });
   }
 }
+
+class ContainerTabFav extends StatelessWidget {
+  final String icon;
+  final String title;
+  final void Function() onTap;
+  final double height;
+  final Color textColor, backgroundColor;
+  ContainerTabFav(
+      {required this.title,
+        required this.onTap,
+        required this.textColor,
+        required this.height,
+        required this.backgroundColor,
+        required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          alignment: Alignment.center,
+          height: 40,
+          decoration: BoxDecoration(
+            // borderRadius: BorderRadius.circular(25),
+
+           border: Border(
+             bottom: BorderSide(color: backgroundColor,width: 2),
+
+           )
+          ),
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.cairo(
+                      color: textColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
+                sizedWidth(10),
+                SvgPicture.asset(
+                  icon,
+                  color: textColor,
+                  // width: 28,
+                  height: height,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+

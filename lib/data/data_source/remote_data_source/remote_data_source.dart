@@ -43,6 +43,7 @@ class RemoteDataSource implements BaseRemoteDataSource {
     final response = await Dio().get(
       "${ApiConstants.getPhotosPath}page=$page&placeId=$placeId",
     );
+    print(response.statusCode.toString() + "getPhotos");
     if (response.statusCode == 200) {
       return ResponsePhotos.fromJson(response.data);
     } else {

@@ -16,13 +16,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'dart:ui' as ui;
 import '../../../../core/utlis/enums.dart';
+import '../../../../core/utlis/strings.dart';
+import '../../../../core/widgets/cached_image_widget.dart';
+import '../../../../core/widgets/texts.dart';
+import '../../../../domin/entities/city.dart';
+import '../../../controller/app_bloc/app_cubit.dart';
+import '../../../controller/search_cubit/cubit/search_cubit.dart';
+import '../places_screen/places_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-const HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-
 }
 
 var cardAspectRatio = 12.0 / 16.0;
@@ -35,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     focusNode = FocusNode();
   }
@@ -83,114 +89,266 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "القارات".tr(),
-                            style: GoogleFonts.cairo(
-                                textStyle: const TextStyle(
-                                    fontSize: 16,
-                                    color: textColor,
-                                    fontWeight: FontWeight.bold)),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Directionality(
-                        textDirection: ui.TextDirection.ltr,
-                        child: Container(
-                          width: double.infinity,
-                          height: heightScreen(context) / 2,
-                          child: Stack(children: [
-                            CardScrollWidget(
-                              list: state.homeModel!.continents,
-                              currentPage: state.currentPage,
-                            ),
-                            Positioned.fill(
-                              child: PageView.builder(
-                                itemCount: state.homeModel!.continents.length,
-                                controller: state.pageController,
-                                reverse: true,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              duration:
-                                                  Duration(milliseconds: 100),
-                                              reverseDuration:
-                                                  Duration(milliseconds: 100),
-                                              alignment: Alignment.center,
-                                              curve: Curves.ease,
-                                              type: PageTransitionType.fade,
-                                              child: CitiesScreen(
-                                                  continent: state.homeModel!
-                                                      .continents[index])));
-                                    },
+                      /// container search
+                      AppCubit.get(context).currentIndex == 1
+                          ? BlocBuilder<SearchCubit, SearchState>(
+                              builder: (context, state) {
+                                return Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 30),
                                     child: Container(
-                                      color: Colors.transparent,
-                                      //  color: Colors.amber,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          // ***  app
+                                          Directionality(
+                                            textDirection: ui.TextDirection.rtl,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                AnimatedContainer(
+                                                  // color: Colors.red,
+                                                  duration: Duration(
+                                                      milliseconds: 300),
+                                                  width: focusNode!.hasFocus
+                                                      ? 210
+                                                      : 50,
+                                                  child: TextField(
+                                                    controller: _controller,
+                                                    focusNode: focusNode,
+                                                    onSubmitted: (value) {
+                                                      focusNode!.unfocus();
+                                                      SearchCubit.get(context)
+                                                          .requestFocus(false);
+                                                      _controller.clear();
+                                                      SearchCubit.get(context)
+                                                          .searchCities(
+                                                              textSearch: "");
+                                                      // HomeCubit.get(context)
+                                                      //     .changeFocusFieldSearch(false);
+                                                    },
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                    cursorColor: Colors.white,
+                                                    onChanged: (value) async {
+                                                      if (_controller
+                                                          .text.isNotEmpty) {
+                                                        SearchCubit.get(context)
+                                                            .searchCities(
+                                                                textSearch:
+                                                                    _controller
+                                                                        .text
+                                                                        .trim());
+                                                      }
+                                                    },
+                                                    decoration: InputDecoration(
+                                                        border:
+                                                            InputBorder.none,
+                                                        hintText:
+                                                            Strings.search.tr(),
+                                                        hintStyle: GoogleFonts.cairo(
+                                                            textStyle:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: Colors
+                                                                        .white38)),
+                                                        prefixIcon: InkWell(
+                                                          onTap: () {
+                                                            if (!focusNode!
+                                                                .hasFocus) {
+                                                              focusNode!
+                                                                  .requestFocus();
+                                                              SearchCubit.get(
+                                                                      context)
+                                                                  .requestFocus(
+                                                                      true);
+                                                            } else {
+                                                              focusNode!
+                                                                  .unfocus();
+                                                              SearchCubit.get(
+                                                                      context)
+                                                                  .requestFocus(
+                                                                      false);
+                                                            }
+                                                          },
+                                                          child: const Icon(
+                                                              Icons.search,
+                                                              color:
+                                                                  Colors.white),
+                                                        )),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 5),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            35),
+                                                    // color: Color.fromARGB(255, 20, 20, 20),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "EzyTravel",
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      sizedWidth(5),
+                                                      Image.asset(
+                                                        "assets/images/newlogo2.png",
+                                                        width: 60,
+                                                        height: 60,
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             )
-                          ]),
-                        ),
-                      ),
+                          : SizedBox(),
 
-                      /// ** most popular Cities
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
+                      Stack(
                         children: [
-                          Text(
-                            "أشهر المدن السياحية".tr(),
-                            style: GoogleFonts.cairo(
-                                textStyle: const TextStyle(
-                                    fontSize: 16,
-                                    color: textColor,
-                                    fontWeight: FontWeight.bold)),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 18,
-                      ),
-                      ListMostPopularCities(
-                        mostPopularCities: state.homeModel!.mostPopularCities,
-                      ),
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "القارات".tr(),
+                                    style: GoogleFonts.cairo(
+                                        textStyle: const TextStyle(
+                                            fontSize: 16,
+                                            color: textColor,
+                                            fontWeight: FontWeight.bold)),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Directionality(
+                                textDirection: ui.TextDirection.ltr,
+                                child: Container(
+                                  width: double.infinity,
+                                  height: heightScreen(context) / 2,
+                                  child: Stack(children: [
+                                    CardScrollWidget(
+                                      list: state.homeModel!.continents,
+                                      currentPage: state.currentPage,
+                                    ),
+                                    Positioned.fill(
+                                      child: PageView.builder(
+                                        itemCount:
+                                            state.homeModel!.continents.length,
+                                        controller: state.pageController,
+                                        physics: BouncingScrollPhysics(),
+                                        reverse: true,
+                                        itemBuilder: (context, index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      duration: Duration(
+                                                          milliseconds: 100),
+                                                      reverseDuration: Duration(
+                                                          milliseconds: 100),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      curve: Curves.ease,
+                                                      type: PageTransitionType
+                                                          .fade,
+                                                      child: CitiesScreen(
+                                                          continent: state
+                                                                  .homeModel!
+                                                                  .continents[
+                                                              index])));
+                                            },
+                                            child: Container(
+                                              color: Colors.transparent,
+                                              //  color: Colors.amber,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  ]),
+                                ),
+                              ),
 
-                      /// ** most popular Places
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "أشهر المعالم السياحية".tr(),
-                            style: GoogleFonts.cairo(
-                                textStyle: const TextStyle(
-                                    fontSize: 16,
-                                    color: textColor,
-                                    fontWeight: FontWeight.bold)),
-                          )
+                              /// ** most popular Cities
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "أشهر المدن السياحية".tr(),
+                                    style: GoogleFonts.cairo(
+                                        textStyle: const TextStyle(
+                                            fontSize: 16,
+                                            color: textColor,
+                                            fontWeight: FontWeight.bold)),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 18,
+                              ),
+                              ListMostPopularCities(
+                                mostPopularCities:
+                                    state.homeModel!.mostPopularCities,
+                              ),
+
+                              /// ** most popular Places
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "أشهر المعالم السياحية".tr(),
+                                    style: GoogleFonts.cairo(
+                                        textStyle: const TextStyle(
+                                            fontSize: 16,
+                                            color: textColor,
+                                            fontWeight: FontWeight.bold)),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 18,
+                              ),
+                              ListMostPopularPlaces(
+                                mostPopularPlaces:
+                                    state.homeModel!.mostPopularPlaces,
+                              ),
+                            ],
+                          ),
+
+                          /// LIST SEARCH CITES
+                          _bodyWidget()
                         ],
-                      ),
-                      SizedBox(
-                        height: 18,
-                      ),
-                      ListMostPopularPlaces(
-                        mostPopularPlaces: state.homeModel!.mostPopularPlaces,
-                      ),
+                      )
 
                       // sizedHeight(10),
                       // Expanded(
@@ -230,6 +388,91 @@ class _HomeScreenState extends State<HomeScreen> {
       listener: (BuildContext context, HomeStateGetHome state) {},
     );
   }
+
+  Widget _bodyWidget() {
+    return BlocBuilder<SearchCubit, SearchState>(
+      builder: (context, state) {
+        switch (state.citiesStat) {
+          case RequestState.loaded:
+            return state.response.isEmpty
+                ? SizedBox()
+                : Container(
+                    color: backgroundColor,
+                    child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: state.response.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          SearchResponse searchResponse = state.response[index];
+                          return GestureDetector(
+                            onTap: () {
+                              pushPage(context,
+                                  PlacesScreen(cityId: searchResponse.city.id));
+                            },
+                            child: Container(
+                              height: 100,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              decoration: const BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: Colors.grey, width: .8))),
+                              child: Row(children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(40),
+                                  child: CachedNetworkImageWidget(
+                                      image: searchResponse.country.image,
+                                      width: 80,
+                                      height: 80,
+                                      iconError: const Icon(Icons.error)),
+                                ),
+                                // Align(
+                                //   alignment: Alignment.bottomCenter,
+                                //   child: Container(
+                                //     height: 45,
+                                //     decoration: const BoxDecoration(
+                                //         gradient: LinearGradient(
+                                //             begin: Alignment(0.0, -1.279),
+                                //             end: Alignment(0.0, 0.618),
+                                //             colors: [
+                                //           Color(0x000d0d0d),
+                                //           Color(0xff000000)
+                                //         ],
+                                //             stops: [
+                                //           0.0,
+                                //           1.0
+                                //         ])),
+                                //   ),
+                                // ),
+                                sizedWidth(30),
+                                // Positioned(
+                                //     right: 10, top: 4, child: IconFavorite(city: city)),
+                                Expanded(
+                                  child: Texts(
+                                    title: getText(searchResponse.city.title),
+                                    textColor: Colors.white,
+                                    fontSize: 14,
+                                    weight: FontWeight.normal,
+                                  ),
+                                )
+                              ]),
+                            ),
+                          );
+                        }),
+                  );
+
+          case RequestState.error:
+            return SizedBox();
+
+          case RequestState.pagination:
+            return const SizedBox();
+          case RequestState.loading:
+            return SizedBox();
+        }
+      },
+    );
+  }
 }
 
 class CardScrollWidget extends StatelessWidget {
@@ -237,6 +480,7 @@ class CardScrollWidget extends StatelessWidget {
   var padding = 10.0;
   var verticalInset = 15.0;
   final List<Continent> list;
+
   CardScrollWidget({required this.list, this.currentPage});
 
   @override
@@ -280,7 +524,7 @@ class CardScrollWidget extends StatelessWidget {
                   topRight: Radius.circular(5),
                   bottomRight: Radius.circular(40)),
               child: Container(
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                decoration: BoxDecoration(color: Color(0xfff050505), boxShadow: [
                   BoxShadow(
                       color: Colors.black12,
                       offset: Offset(3.0, 6.0),
@@ -296,7 +540,7 @@ class CardScrollWidget extends StatelessWidget {
                         imageUrl: ApiConstants.baseUrlImages + list[i].image,
                         height: double.infinity,
                         width: double.infinity,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                         errorWidget: (context, url, error) => const Icon(
                           Icons.photo,
                           size: 50,

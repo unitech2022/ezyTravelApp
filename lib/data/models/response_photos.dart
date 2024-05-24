@@ -18,14 +18,14 @@ class ResponsePhotos extends BaseResponse {
 
 class PhotoResponse {
  final PhotoModel photo;
- final CityModel city;
- final CountryModel country;
+ final CityModel? city;
+ final CountryModel? country;
 
   PhotoResponse(
       {required this.photo, required this.city, required this.country});
 
  factory PhotoResponse.fromJson(Map<String, dynamic> json) => PhotoResponse(
       photo : PhotoModel.fromJson(json['photo']),
-      city : CityModel.fromJson(json['city']),
-      country : CountryModel.fromJson(json['country']));
+      city :json['city']!=null? CityModel.fromJson(json['city']):null,
+      country :json['country']!=null? CountryModel.fromJson(json['country']):null);
 }

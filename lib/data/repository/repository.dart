@@ -35,6 +35,7 @@ class Repository extends BaseRepository {
     final result =
         await baseRemoteDataSource.getPhotos(page: page, placeId: placeId);
 
+
     try {
       return Right(result);
     } on ServerExceptions catch (failure) {

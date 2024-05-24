@@ -1,7 +1,12 @@
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:exit_travil/data/models/city_model.dart';
+import 'package:exit_travil/presentation/controller/favorite_cubit/cubit/favorite_cubit.dart';
+import 'package:exit_travil/presentation/ui/screens/places_screen/componts/list_places_grid_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:page_transition/page_transition.dart';
 
@@ -13,6 +18,7 @@ import '../../../../../core/styles/sizing.dart';
 import '../../../../../core/utlis/enums.dart';
 import '../../../../../core/widgets/cached_image_widget.dart';
 import '../../../../../core/widgets/texts.dart';
+import '../../../../../domin/entities/city.dart';
 import '../../../../../domin/entities/place.dart';
 import '../../../../controller/place_cubit/place_cubit.dart';
 import '../../cities_screen/cities_screen.dart';
@@ -20,114 +26,161 @@ import '../../place_details/componts/indicator_widget.dart';
 import '../../place_details/componts/slider_widget.dart';
 import '../../place_details/place_details.dart';
 
-class PlacesListWidget extends StatefulWidget {
+class PlacesListFavWidget extends StatefulWidget {
   final List<Place> places;
-  const PlacesListWidget(this.places, {super.key});
+  final List<City> cities;
+
+  const PlacesListFavWidget(this.places, this.cities, {super.key});
 
   @override
-  State<PlacesListWidget> createState() => _PlacesListWidgetState();
+  State<PlacesListFavWidget> createState() => _PlacesListFavWidgetState();
 }
 
-class _PlacesListWidgetState extends State<PlacesListWidget> {
+class _PlacesListFavWidgetState extends State<PlacesListFavWidget> {
   final CarouselController _controller = CarouselController();
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        padding: EdgeInsets.zero,
-        itemCount: widget.places.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          Place place = widget.places[index];
-          return GestureDetector(
-            onTap: () {
-              //  pushPage(context, PlaceDetailsScreen(place.id));
-              // Navigator.of(context).push(CustomPageRoute(
-              //                   child: PlaceDetailsScreen(place.id),
-              //                   direction: AxisDirection.up));
-
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      duration: Duration(milliseconds: 500),
-                      reverseDuration: Duration(milliseconds: 500),
-                      alignment: Alignment.center,
-                      curve: Curves.ease,
-                      type: PageTransitionType.bottomToTop,
-                      child: PlaceDetailsListScreen(
-                        cityId: place.cityId,
-                        index: place.id,
-                      )));
-
-              // showBottomSheetWidget(context,place.id);
-
-              // todo :  show bottom sheet
-            },
-            child: Container(
-              height: 140,
-              decoration: const BoxDecoration(),
-              child: Stack(children: [
-                CachedNetworkImageWidget(
-                    image: place.image,
-                    width: double.infinity,
-                    height: double.infinity,
-                    iconError: const Icon(Icons.error)),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 45,
-                    decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment(0.0, -1.279),
-                            end: Alignment(0.0, 0.618),
-                            colors: [Color(0x000d0d0d), Color(0xff000000)],
-                            stops: [0.0, 1.0])),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconFavorite(
-                            id: place.id,
-                            type: 1,
-                          ),
-                        ],
-                      ),
-                    )),
-                Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(bottom: 8, left: 10, right: 10),
-                      child: Row(
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.location_on,
-                                color: Colors.white,
-                              ),
-                              sizedWidth(paddingCityTitle),
-                              Texts(
-                                title: getText(place.title),
-                                textColor: Colors.white,
-                                fontSize: 14,
-                                weight: FontWeight.normal,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ))
-              ]),
+    return BlocBuilder<FavoriteCubit, FavoriteState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            SizedBox(
+              height: 40,
+              child: ListView.builder(
+                  itemCount: widget.cities.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (ctx, index) {
+                    City city = widget.cities[index];
+                    return ContainerTabCityFav(
+                      title: getText(city.title),
+                      onTap: () {
+                        FavoriteCubit.get(context).changIndexTabCity(city.id);
+                        FavoriteCubit.get(context).fillterFav(widget.places.where((element) => element.cityId==city.id).toList());
+                      },
+                      textColor: Colors.black,
+                      backgroundColor: state.currentIndexCitySelected == city.id
+                          ? Colors.white
+                          : Colors.white.withOpacity(.5),
+                    );
+                  }),
             ),
-          );
-        });
+            SizedBox(
+              height: 15,
+            ),
+            Expanded(
+              child: ListPlacesGridWidget(places: state.placesFillter)
+              
+              // ListView.builder(
+              //     padding: EdgeInsets.zero,
+              //     itemCount:state.placesFillter.length,
+              //     shrinkWrap: true,
+              //     itemBuilder: (context, index) {
+              //       Place place = state.placesFillter[index];
+              //       return GestureDetector(
+              //         onTap: () {
+              //           //  pushPage(context, PlaceDetailsScreen(place.id));
+              //           // Navigator.of(context).push(CustomPageRoute(
+              //           //                   child: PlaceDetailsScreen(place.id),
+              //           //                   direction: AxisDirection.up));
+
+              //           Navigator.push(
+              //               context,
+              //               PageTransition(
+              //                   duration: Duration(milliseconds: 500),
+              //                   reverseDuration: Duration(milliseconds: 500),
+              //                   alignment: Alignment.center,
+              //                   curve: Curves.ease,
+              //                   type: PageTransitionType.bottomToTop,
+              //                   child: PlaceDetailsListScreen(
+              //                     cityId: place.cityId,
+              //                     index: place.id,
+              //                   )));
+
+              //           // showBottomSheetWidget(context,place.id);
+
+              //           // todo :  show bottom sheet
+              //         },
+              //         child: Container(
+              //           height: 140,
+              //           decoration: const BoxDecoration(),
+              //           child: Stack(children: [
+              //             CachedNetworkImageWidget(
+              //                 image: place.image,
+              //                 width: double.infinity,
+              //                 height: double.infinity,
+              //                 iconError: const Icon(Icons.error)),
+              //             Align(
+              //               alignment: Alignment.bottomCenter,
+              //               child: Container(
+              //                 height: 45,
+              //                 decoration: const BoxDecoration(
+              //                     gradient: LinearGradient(
+              //                         begin: Alignment(0.0, -1.279),
+              //                         end: Alignment(0.0, 0.618),
+              //                         colors: [
+              //                       Color(0x000d0d0d),
+              //                       Color(0xff000000)
+              //                     ],
+              //                         stops: [
+              //                       0.0,
+              //                       1.0
+              //                     ])),
+              //               ),
+              //             ),
+              //             Align(
+              //                 alignment: Alignment.topCenter,
+              //                 child: Padding(
+              //                   padding: const EdgeInsets.only(
+              //                       left: 10, right: 10, top: 4),
+              //                   child: Row(
+              //                     mainAxisAlignment: MainAxisAlignment.end,
+              //                     children: [
+              //                       IconFavorite(
+              //                         id: place.id,
+              //                         type: 1,
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 )),
+              //             Align(
+              //                 alignment: Alignment.bottomCenter,
+              //                 child: Padding(
+              //                   padding: const EdgeInsets.only(
+              //                       bottom: 8, left: 10, right: 10),
+              //                   child: Row(
+              //                     children: [
+              //                       Row(
+              //                         mainAxisSize: MainAxisSize.min,
+              //                         children: [
+              //                           const Icon(
+              //                             Icons.location_on,
+              //                             color: Colors.white,
+              //                           ),
+              //                           sizedWidth(paddingCityTitle),
+              //                           Texts(
+              //                             title: getText(place.title),
+              //                             textColor: Colors.white,
+              //                             fontSize: 14,
+              //                             weight: FontWeight.normal,
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 ))
+              //           ]),
+              //         ),
+              //       );
+              //     }),
+            
+            
+            
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void showBottomSheetWidget(context, placeId) {
@@ -337,5 +390,43 @@ class _PlacesListWidgetState extends State<PlacesListWidget> {
             ),
           );
         });
+  }
+}
+
+class ContainerTabCityFav extends StatelessWidget {
+  final String title;
+  final void Function() onTap;
+
+  final Color textColor, backgroundColor;
+
+  ContainerTabCityFav({
+    required this.title,
+    required this.onTap,
+    required this.textColor,
+    required this.backgroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 25),
+        margin: EdgeInsets.symmetric(horizontal: 3),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: backgroundColor,
+        ),
+        child: Text(
+          title,
+          style: GoogleFonts.cairo(
+              color: textColor,
+              fontSize: 15,
+              height: 1.2,
+              fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 }

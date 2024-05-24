@@ -9,8 +9,7 @@ import 'package:exit_travil/presentation/ui/screens/home_screen/home_screen.dart
 import 'package:exit_travil/presentation/ui/screens/places_screen/places_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../../../core/services/services_locator.dart';
+
 import '../../../core/utlis/enums.dart';
 import '../../../core/utlis/strings.dart';
 import '../../../core/widgets/cached_image_widget.dart';
@@ -60,7 +59,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           children: [
             Padding(
                 padding: EdgeInsets.only(
-                    top: AppCubit.get(context).currentIndex == 1 ? 80 : 0),
+                    top:  0),
                 child: IndexedStack(
                   children: screens,
                   index:  AppCubit.get(context).currentIndex,
@@ -205,118 +204,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               ),
             ),
-            AppCubit.get(context).currentIndex == 1
-                ? BlocProvider(
-                    create: (context) => sl<SearchCubit>(),
-                    child: BlocBuilder<SearchCubit, SearchState>(
-                      builder: (context, state) {
-                        return Align(
-                          alignment: Alignment.topCenter,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 30, left: 18, right: 18),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
 
-                                // ***  app
-                                Directionality(
-                                  textDirection: ui.TextDirection.rtl,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      AnimatedContainer(
-                                        // color: Colors.red,
-                                        duration: Duration(milliseconds: 300),
-                                        width: focusNode!.hasFocus ? 210 : 50,
-                                        child: TextField(
-                                          controller: _controller,
-                                          focusNode: focusNode,
-                                          onSubmitted: (value) {
-                                            focusNode!.unfocus();
-                                            SearchCubit.get(context)
-                                                .requestFocus(false);
-                                            _controller.clear();
-                                            SearchCubit.get(context)
-                                                .searchCities(textSearch: "");
-                                            // HomeCubit.get(context)
-                                            //     .changeFocusFieldSearch(false);
-                                          },
-                                          style: TextStyle(color: Colors.white),
-                                          cursorColor: Colors.white,
-                                          onChanged: (value) async {
-                                            if (_controller.text.isNotEmpty) {
-                                              SearchCubit.get(context)
-                                                  .searchCities(
-                                                      textSearch: _controller.text
-                                                          .trim());
-                                            }
-                                          },
-                                          decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: Strings.search.tr(),
-                                              hintStyle: GoogleFonts.cairo(
-                                                  textStyle: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.white38)),
-                                              prefixIcon: InkWell(
-                                                onTap: () {
-                                                  if (!focusNode!.hasFocus) {
-                                                    focusNode!.requestFocus();
-                                                    SearchCubit.get(context)
-                                                      .requestFocus(true);
-                                                  } else {
-                                                    focusNode!.unfocus();
-                                                    SearchCubit.get(context)
-                                                      .requestFocus(false);
-                                                  }
-                                
-                                                  
-                                                 
-                                                },
-                                                child: const Icon(Icons.search,
-                                                    color: Colors.white),
-                                              )),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 5),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(35),
-                                          // color: Color.fromARGB(255, 20, 20, 20),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "EzyTravel",
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            sizedWidth(5),
-                                            Image.asset(
-                                              "assets/images/newlogo2.png",
-                                              width: 60,
-                                              height: 60,
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                _bodyWidget(state)
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                : SizedBox()
+
+
           ],
         ),
         // bottomNavigationBar: BottomNavyBar(
